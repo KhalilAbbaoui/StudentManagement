@@ -39,7 +39,7 @@ pipeline {
                 script {
                     echo 'Running SonarQube analysis...' // Message d'information dans les logs
                     sh '''
-                    mvn sonar:sonar \ // Exécution de l'analyse SonarQube sur le projet
+                    mvn sonar:sonar  // Exécution de l'analyse SonarQube sur le projet
                         -Dsonar.projectKey=student-management \  // Clé de projet SonarQube
                         -Dsonar.host.url=${SONARQUBE_URL} \  // URL de l'instance SonarQube
                         -Dsonar.login=${SONARQUBE_TOKEN}  // Token d'authentification pour accéder à SonarQube
