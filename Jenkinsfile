@@ -8,8 +8,8 @@ pipeline {
 
     environment {
         // Définition des variables d'environnement utilisées dans le pipeline.
-        JAVA_HOME = 'C:\jdk-21'  // Remplacez par le chemin correct de votre JDK
-        PATH = "${JAVA_HOME}\bin:${env.PATH}"
+        JAVA_HOME = 'C:\\jdk-21'  // Remplacez par le chemin correct de votre JDK
+        PATH = "${JAVA_HOME}\\bin:${env.PATH}"
         DOCKER_IMAGE = 'khalilabbaoui/studentmanagement:latest'  // Nom de l'image Docker à construire
         APP_PORT = '8081'  // Le port où l'application sera exposée
         SONARQUBE_URL = 'http://localhost:9999'  // URL de l'instance SonarQube
