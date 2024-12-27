@@ -2,11 +2,14 @@ pipeline {
     agent any // Définir l'agent Jenkins qui exécutera le pipeline. "any" signifie qu'il peut être exécuté sur n'importe quel agent disponible.
 
     tools {
-        maven 'Maven 3.9.5' // Spécifie la version de Maven à utiliser pour la construction du projet.
+        maven 'Maven 3.9.5' // Spécification de la version du Maven à utiliser pour la construction du projet.
+        jdk 'JDK 21' //Spécification du JDK
     }
 
     environment {
         // Définition des variables d'environnement utilisées dans le pipeline.
+        JAVA_HOME = 'C:/jdk-21'  // Remplacez par le chemin correct de votre JDK
+        PATH = "${JAVA_HOME}\bin:${env.PATH}"
         DOCKER_IMAGE = 'khalilabbaoui/studentmanagement:latest'  // Nom de l'image Docker à construire
         APP_PORT = '8081'  // Le port où l'application sera exposée
         SONARQUBE_URL = 'http://localhost:9999'  // URL de l'instance SonarQube
@@ -94,7 +97,7 @@ pipeline {
             echo 'Pipeline executed successfully!'
         }
         failure {
-            echo 'An error occurred during the pipeline execution.'  
+            echo 'An error occurred during the pipeline execution.'
         }
     }
 }
