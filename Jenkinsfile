@@ -50,9 +50,9 @@ pipeline {
         stage('Docker Build') {
             steps {
                 script {
-                    echo 'Building the Docker image for StudentManagement...' // Message d'information dans les logs
+                    echo 'Building the Docker image for StudentManagement...' 
                     sh '''
-                    docker build -t ${DOCKER_IMAGE} .  // Commande Docker pour construire l'image à partir du Dockerfile
+                    docker build -t ${DOCKER_IMAGE} .  # Commande Docker pour construire l'image à partir du Dockerfile
                     '''
                 }
             }
