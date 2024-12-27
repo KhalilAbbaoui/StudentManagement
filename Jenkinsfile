@@ -25,9 +25,9 @@ pipeline {
         stage('Build') {
             steps {
                 script {
-                    echo 'Building the project with Maven...' // Message d'information dans les logs
+                    echo 'Building the project with Maven...'
                     sh '''
-                    mvn clean compile  // Commande Maven pour nettoyer et compiler le projet
+                    mvn clean compile
                     '''
                 }
             }
@@ -37,12 +37,12 @@ pipeline {
         stage('SonarQube Analysis') {
             steps {
                 script {
-                    echo 'Running SonarQube analysis...' // Message d'information dans les logs
+                    echo 'Running SonarQube analysis...'
                     sh '''
                     mvn sonar:sonar  // Exécution de l'analyse SonarQube sur le projet
-                        -Dsonar.projectKey=student-management   // Clé de projet SonarQube
-                        -Dsonar.host.url=${SONARQUBE_URL}   // URL de l'instance SonarQube
-                        -Dsonar.login=${SONARQUBE_TOKEN}  // Token d'authentification pour accéder à SonarQube
+                        -Dsonar.projectKey=student-management \
+                        -Dsonar.host.url=${SONARQUBE_URL} \
+                        -Dsonar.login=${SONARQUBE_TOKEN}
                     '''
                 }
             }
@@ -52,9 +52,9 @@ pipeline {
         stage('Test') {
             steps {
                 script {
-                    echo 'Running tests with Maven...' // Message d'information dans les logs
+                    echo 'Running tests with Maven...'
                     sh '''
-                    mvn test  // Commande Maven pour exécuter les tests unitaires du projet
+                    mvn test
                     '''
                 }
             }
@@ -76,7 +76,7 @@ pipeline {
         stage('Run Application') {
             steps {
                 script {
-                    echo 'Starting the StudentManagement application container...' // Message d'information dans les logs
+                    echo 'Starting the StudentManagement application container...'
                     sh '''
                     docker stop studentmanagement || true  // Arrêter le conteneur existant s'il est en cours d'exécution
                     docker rm studentmanagement || true  // Supprimer le conteneur existant
@@ -91,10 +91,10 @@ pipeline {
 
     post {
         success {
-            echo 'Pipeline executed successfully!'  // Message de réussite lorsque le pipeline se termine avec succès
+            echo 'Pipeline executed successfully!'
         }
         failure {
-            echo 'An error occurred during the pipeline execution.'  // Message d'erreur lorsque le pipeline échoue
+            echo 'An error occurred during the pipeline execution.'  
         }
     }
 }
