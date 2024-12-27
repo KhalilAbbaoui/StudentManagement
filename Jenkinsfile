@@ -40,8 +40,8 @@ pipeline {
                     echo 'Running SonarQube analysis...' // Message d'information dans les logs
                     sh '''
                     mvn sonar:sonar  // Exécution de l'analyse SonarQube sur le projet
-                        -Dsonar.projectKey=student-management \  // Clé de projet SonarQube
-                        -Dsonar.host.url=${SONARQUBE_URL} \  // URL de l'instance SonarQube
+                        -Dsonar.projectKey=student-management   // Clé de projet SonarQube
+                        -Dsonar.host.url=${SONARQUBE_URL}   // URL de l'instance SonarQube
                         -Dsonar.login=${SONARQUBE_TOKEN}  // Token d'authentification pour accéder à SonarQube
                     '''
                 }
@@ -80,8 +80,8 @@ pipeline {
                     sh '''
                     docker stop studentmanagement || true  // Arrêter le conteneur existant s'il est en cours d'exécution
                     docker rm studentmanagement || true  // Supprimer le conteneur existant
-                    docker run -d -p ${APP_PORT}:8080 \  // Démarrer un nouveau conteneur et exposer le port
-                        --name studentmanagement \  // Nommer le conteneur
+                    docker run -d -p ${APP_PORT}:8080   // Démarrer un nouveau conteneur et exposer le port
+                        --name studentmanagement   // Nommer le conteneur
                         ${DOCKER_IMAGE}  // Utiliser l'image Docker construite précédemment
                     '''
                 }
