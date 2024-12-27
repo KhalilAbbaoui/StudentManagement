@@ -7,10 +7,10 @@ pipeline {
     }
 
     environment {
-        
+
         DOCKER_IMAGE = 'khalilabbaoui/studentmanagement:latest'  // Nom de l'image Docker à construire
         APP_PORT = '8081'  // Le port où l'application sera exposée
-        SONARQUBE_URL = 'http://localhost:9999'  // URL de l'instance SonarQube
+        SONARQUBE_URL = 'http://127.0.0.1:9999/'  // URL de l'instance SonarQube
         SONARQUBE_TOKEN = credentials('267de1cd-57f9-448d-a77e-ad1ce7ba3d9a')  // Token SonarQube récupéré à partir des credentials Jenkins
     }
 
