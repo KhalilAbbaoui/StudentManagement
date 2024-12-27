@@ -3,14 +3,15 @@ pipeline {
 
     tools {
         maven 'Maven 3.9.5' // Spécification de la version du Maven à utiliser pour la construction du projet.
-
+        jdk 'JDK 21' //Spécification du JDK
     }
 
     environment {
 
         DOCKER_IMAGE = 'khalilabbaoui/studentmanagement:latest'  // Nom de l'image Docker à construire
         APP_PORT = '8081'  // Le port où l'application sera exposée
-
+        SONARQUBE_URL = 'http://127.0.0.1:9999'  // URL de l'instance SonarQube
+        SONARQUBE_TOKEN = credentials('267de1cd-57f9-448d-a77e-ad1ce7ba3d9a')  // Token SonarQube récupéré à partir des credentials Jenkins
     }
 
     stages {
@@ -33,6 +34,20 @@ pipeline {
             }
         }
 
+        // Étape d'analyse du code avec SonarQube.
+        stage('SonarQube Analysis') {
+            steps {
+                script {
+                    echo 'Running SonarQube analysis...'
+                    sh '''
+                    mvn sonar:sonar \
+                        -Dsonar.projectKey=student-management \
+                        -Dsonar.host.url=${SONARQUBE_URL} \
+                        -Dsonar.login=${SONARQUBE_TOKEN}
+                    '''
+                }
+            }
+        }
 
         // Étape pour exécuter les tests unitaires avec Maven.
         stage('Test') {
@@ -45,24 +60,14 @@ pipeline {
                 }
             }
         }
-           // Étape de vérification de la version de Docker (utile pour déboguer sur Windows).
-        stage('Check Docker Version') {
-            steps {
-                script {
-                    echo 'Checking Docker version...'
-                    sh '''
-                    docker --version
-                    '''
-                }
-            }
-        }
+
         // Étape de construction de l'image Docker pour l'application.
         stage('Docker Build') {
             steps {
                 script {
                     echo 'Building the Docker image for StudentManagement...'
                     sh '''
-                    docker build -t ${DOCKER_IMAGE} .  # Commande Docker pour construire l'image à partir du Dockerfile
+                    docker build -t ${DOCKER_IMAGE} .
                     '''
                 }
             }
@@ -74,11 +79,11 @@ pipeline {
                 script {
                     echo 'Starting the StudentManagement application container...'
                     sh '''
-                    docker stop studentmanagement || true  // Arrêter le conteneur existant s'il est en cours d'exécution
-                    docker rm studentmanagement || true  // Supprimer le conteneur existant
-                    docker run -d -p ${APP_PORT}:8080   // Démarrer un nouveau conteneur et exposer le port
-                        --name studentmanagement   // Nommer le conteneur
-                        ${DOCKER_IMAGE}  // Utiliser l'image Docker construite précédemment
+                    docker stop studentmanagement || true
+                    docker rm studentmanagement || true
+                    docker run -d -p ${APP_PORT}:8080
+                        --name studentmanagement
+                        ${DOCKER_IMAGE}
                     '''
                 }
             }
