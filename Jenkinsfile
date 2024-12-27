@@ -9,8 +9,8 @@ pipeline {
         // Définition des variables d'environnement utilisées dans le pipeline.
         DOCKER_IMAGE = 'khalilabbaoui/studentmanagement:latest'  // Nom de l'image Docker à construire
         APP_PORT = '8081'  // Le port où l'application sera exposée
-        SONARQUBE_URL = 'http://localhost:9000'  // URL de l'instance SonarQube
-        SONARQUBE_TOKEN = credentials('sonarqube-token')  // Token SonarQube récupéré à partir des credentials Jenkins
+        SONARQUBE_URL = 'http://localhost:9999'  // URL de l'instance SonarQube
+        SONARQUBE_TOKEN = credentials('studentmanagement')  // Token SonarQube récupéré à partir des credentials Jenkins
     }
 
     stages {
