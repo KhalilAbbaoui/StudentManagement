@@ -31,7 +31,7 @@ pipeline {
             steps {
                 script {
                     echo 'Running SonarQube analysis...'
-                    withSonarQubeEnv(credentialsId: 'stundent sonar', installationName: 'SonarQube') {
+                    withSonarQubeEnv(credentialsId: 'stundent sonar', installationName: 'Sonarqube') {
                         bat """
                             ${SCANNERHOME}/bin/sonar-scanner -Dsonar.projectKey=student-management
                         """
