@@ -14,7 +14,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <!-- SonarQube configuration -->
         <sonar.host.url>http://127.0.0.1:9999</sonar.host.url> <!-- SonarQube server URL -->
-        <sonar.login>squ_c7a5a0a3b0462a523a3c3c20429ffc5512d8a3bd</sonar.login>
+        <sonar.login>be476250-e643-4a50-83ed-ab9fe6296087</sonar.login>
     </properties>
 
     <dependencies>
