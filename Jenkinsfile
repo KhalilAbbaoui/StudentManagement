@@ -3,13 +3,13 @@ pipeline {
 
     tools {
         maven 'Maven 3.9.5' // Spécification de la version du Maven à utiliser pour la construction du projet.
-        jdk 'JDK 21' //Spécification du JDK
+        jdk 'JDK 21' // Spécification du JDK
     }
 
     environment {
-
         DOCKER_IMAGE = 'khalilabbaoui/studentmanagement:latest'  // Nom de l'image Docker à construire
-        APP_PORT = '8081'  // Le port où l'application sera exposée
+        APP_PORT = '8080'  // Le port où l'application sera exposée à l'intérieur du conteneur
+        HOST_PORT = '8081'  // Le port de la machine hôte pour accéder à l'application (à modifier si 8081 est aussi occupé)
         SONARQUBE_URL = 'http://127.0.0.1:9999'  // URL de l'instance SonarQube
         SONARQUBE_TOKEN = credentials('squ_c7a5a0a3b0462a523a3c3c20429ffc5512d8a3bd')  // Token SonarQube récupéré à partir des credentials Jenkins
     }
@@ -27,7 +27,7 @@ pipeline {
             steps {
                 script {
                     echo 'Building the project with Maven...'
-                    sh '''
+                    bat '''
                     mvn clean compile
                     '''
                 }
@@ -39,10 +39,10 @@ pipeline {
             steps {
                 script {
                     echo 'Running SonarQube analysis...'
-                    sh '''
-                    mvn sonar:sonar \
-                        -Dsonar.projectKey=student-management \
-                        -Dsonar.host.url=${SONARQUBE_URL} \
+                    bat '''
+                    mvn sonar:sonar ^
+                        -Dsonar.projectKey=student-management ^
+                        -Dsonar.host.url=${SONARQUBE_URL} ^
                         -Dsonar.login=${SONARQUBE_TOKEN}
                     '''
                 }
@@ -54,37 +54,32 @@ pipeline {
             steps {
                 script {
                     echo 'Running tests with Maven...'
-                    sh '''
+                    bat '''
                     mvn test
                     '''
                 }
             }
         }
 
-        // Étape de construction de l'image Docker pour l'application.
+        // Étape de construction de l'image Docker pour l'application avec le plugin Docker Jenkins.
         stage('Docker Build') {
             steps {
                 script {
                     echo 'Building the Docker image for StudentManagement...'
-                    sh '''
-                    docker build -t ${DOCKER_IMAGE} .
-                    '''
+                    docker.build("${DOCKER_IMAGE}")
                 }
             }
         }
 
-        // Étape de démarrage du conteneur Docker avec l'application.
+        // Étape de démarrage du conteneur Docker avec l'application en utilisant le plugin Docker Jenkins.
         stage('Run Application') {
             steps {
                 script {
                     echo 'Starting the StudentManagement application container...'
-                    sh '''
-                    docker stop studentmanagement || true
-                    docker rm studentmanagement || true
-                    docker run -d -p ${APP_PORT}:8080
-                        --name studentmanagement
-                        ${DOCKER_IMAGE}
-                    '''
+                    def app = docker.image("${DOCKER_IMAGE}")
+                    app.withRun("-p ${HOST_PORT}:${APP_PORT}") { // Mapper le port 8081 de la machine hôte vers le port 8080 du conteneur
+                        echo "Application running at port ${HOST_PORT}"
+                    }
                 }
             }
         }
