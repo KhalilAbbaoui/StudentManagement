@@ -1,24 +1,21 @@
 pipeline {
-    agent any // Définir l'agent Jenkins qui exécutera le pipeline. "any" signifie qu'il peut être exécuté sur n'importe quel agent disponible.
-
+    agent any
 
     environment {
-        DOCKER_IMAGE = 'khalilabbaoui/studentmanagement:latest'  // Nom de l'image Docker à construire
-        APP_PORT = '8080'  // Le port où l'application sera exposée à l'intérieur du conteneur
-        HOST_PORT = '8081'  // Le port de la machine hôte pour accéder à l'application (à modifier si 8081 est aussi occupé)
-        SONARQUBE_URL = 'http://127.0.0.1:9999'  // URL de l'instance SonarQube
-        SONARQUBE_TOKEN = credentials('be476250-e643-4a50-83ed-ab9fe6296087')  // Token SonarQube récupéré à partir des credentials Jenkins
+        DOCKER_IMAGE = 'khalilabbaoui/studentmanagement:latest'
+        APP_PORT = '8080'
+        HOST_PORT = '8081'
+        SONARQUBE_URL = 'http://127.0.0.1:9999'
+        SONARQUBE_TOKEN = credentials('be476250-e643-4a50-83ed-ab9fe6296087')
     }
 
     stages {
-        // Étape de récupération du code depuis le repository source.
         stage('Checkout') {
             steps {
-                checkout scm // Cette étape récupère le code source du projet.
+                checkout scm
             }
         }
 
-        // Étape de construction du projet avec Maven.
         stage('Build') {
             steps {
                 script {
@@ -30,23 +27,21 @@ pipeline {
             }
         }
 
-        // Étape d'analyse du code avec SonarQube.
         stage('SonarQube Analysis') {
             steps {
                 script {
                     echo 'Running SonarQube analysis...'
-                     echo "SonarQube URL: ${SONARQUBE_URL}"
-                    bat '''
+                    echo "SonarQube URL: ${SONARQUBE_URL}"
+                    bat """
                     mvn sonar:sonar ^
                         -Dsonar.projectKey=student-management ^
-                        -Dsonar.host.url=${SONARQUBE_URL} ^
-                        -Dsonar.login=${SONARQUBE_TOKEN}
-                    '''
+                        -Dsonar.host.url=%SONARQUBE_URL% ^
+                        -Dsonar.login=%SONARQUBE_TOKEN%
+                    """
                 }
             }
         }
 
-        // Étape pour exécuter les tests unitaires avec Maven.
         stage('Test') {
             steps {
                 script {
@@ -58,7 +53,6 @@ pipeline {
             }
         }
 
-        // Étape de construction de l'image Docker pour l'application avec le plugin Docker Jenkins.
         stage('Docker Build') {
             steps {
                 script {
@@ -68,13 +62,12 @@ pipeline {
             }
         }
 
-        // Étape de démarrage du conteneur Docker avec l'application en utilisant le plugin Docker Jenkins.
         stage('Run Application') {
             steps {
                 script {
                     echo 'Starting the StudentManagement application container...'
                     def app = docker.image("${DOCKER_IMAGE}")
-                    app.withRun("-p ${HOST_PORT}:${APP_PORT}") { // Mapper le port 8081 de la machine hôte vers le port 8080 du conteneur
+                    app.withRun("-p ${HOST_PORT}:${APP_PORT}") {
                         echo "Application running at port ${HOST_PORT}"
                     }
                 }
