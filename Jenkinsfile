@@ -35,6 +35,7 @@ pipeline {
             steps {
                 script {
                     echo 'Running SonarQube analysis...'
+                     echo "SonarQube URL: ${SONARQUBE_URL}"
                     bat '''
                     mvn sonar:sonar ^
                         -Dsonar.projectKey=student-management ^
