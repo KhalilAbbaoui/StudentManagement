@@ -6,7 +6,7 @@ pipeline {
         APP_PORT = '8080'
         HOST_PORT = '8081'
         DOCKER_CREDENTIALS = credentials('student-management')  // Ensure this ID matches your Docker Hub credentials in Jenkins
-        SCANNERHOME = tool 'sonar'  // Ensure this matches your SonarQube scanner installation name
+        SCANNERHOME = 'C:\\Program Files\\Jenkins\\.jenkins\\tools\\hudson.plugins.sonar.SonarRunnerInstallation\\sonar\\bin'  // Define the full path here'  // Ensure this matches your SonarQube scanner installation name
     }
 
     stages {
