@@ -6,7 +6,7 @@ pipeline {
         APP_PORT = '8080'
         HOST_PORT = '8081'
         SONARQUBE_URL = 'http://127.0.0.1:9999'
-        SONARQUBE_TOKEN = credentials('be476250-e643-4a50-83ed-ab9fe6296087')
+        SONARQUBE_TOKEN = credentials('squ_74dac99f6078206e7af50274574e4465806da753')
     }
 
     stages {
