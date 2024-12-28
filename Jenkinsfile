@@ -5,10 +5,8 @@ pipeline {
         DOCKER_IMAGE = 'khalilabbaoui/studentmanagement:latest'
         APP_PORT = '8080'
         HOST_PORT = '8081'
-        SONARQUBE_URL = 'http://127.0.0.1:9999'
-        SONARQUBE_TOKEN = credentials('be476250-e643-4a50-83ed-ab9fe6296087')
-        //ID for this token be476250-e643-4a50-83ed-ab9fe6296087
-        // token squ_74dac99f6078206e7af50274574e4465806da753
+        DOCKER_CREDENTIALS = credentials('dckr_pat_L3UlrfiFpxYjudNTVzD3DcTEny0')  // Ensure this ID matches your Docker Hub credentials in Jenkins
+        SCANNERHOME = tool 'sonar'  // Ensure this matches your SonarQube scanner installation name
     }
 
     stages {
@@ -33,13 +31,11 @@ pipeline {
             steps {
                 script {
                     echo 'Running SonarQube analysis...'
-                    echo "SonarQube URL: ${SONARQUBE_URL}"
-                    bat """
-                    mvn sonar:sonar ^
-                        -Dsonar.projectKey=student-management ^
-                        -Dsonar.host.url=%SONARQUBE_URL% ^
-                        -Dsonar.login=%SONARQUBE_TOKEN%
-                    """
+                    withSonarQubeEnv(credentialsId: 'stundent sonar', installationName: 'SonarQube') {
+                        bat """
+                            ${SCANNERHOME}/bin/sonar-scanner -Dsonar.projectKey=student-management
+                        """
+                    }
                 }
             }
         }
@@ -60,6 +56,17 @@ pipeline {
                 script {
                     echo 'Building the Docker image for StudentManagement...'
                     docker.build("${DOCKER_IMAGE}")
+                }
+            }
+        }
+
+        stage('Push Docker Image') {
+            steps {
+                script {
+                    echo 'Pushing Docker image to the registry...'
+                    docker.withRegistry('', 'dockerhub-credentials') {  // Make sure the credentials ID here is correct
+                        docker.image("${DOCKER_IMAGE}").push()
+                    }
                 }
             }
         }
