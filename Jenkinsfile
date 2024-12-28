@@ -7,7 +7,7 @@ pipeline {
         APP_PORT = '8080'  // Le port où l'application sera exposée à l'intérieur du conteneur
         HOST_PORT = '8081'  // Le port de la machine hôte pour accéder à l'application (à modifier si 8081 est aussi occupé)
         SONARQUBE_URL = 'http://127.0.0.1:9999'  // URL de l'instance SonarQube
-        SONARQUBE_TOKEN = credentials('squ_c7a5a0a3b0462a523a3c3c20429ffc5512d8a3bd')  // Token SonarQube récupéré à partir des credentials Jenkins
+        SONARQUBE_TOKEN = credentials('squ_74dac99f6078206e7af50274574e4465806da753')  // Token SonarQube récupéré à partir des credentials Jenkins
     }
 
     stages {
