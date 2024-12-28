@@ -5,7 +5,7 @@ pipeline {
         DOCKER_IMAGE = 'khalilabbaoui/studentmanagement:latest'
         APP_PORT = '8080'
         HOST_PORT = '8081'
-        DOCKER_CREDENTIALS = credentials('dockerhub-credentials')  // Ensure this ID matches your Docker Hub credentials in Jenkins
+        DOCKER_CREDENTIALS = credentials('student-management')  // Ensure this ID matches your Docker Hub credentials in Jenkins
         SCANNERHOME = tool 'sonar'  // Ensure this matches your SonarQube scanner installation name
     }
 
