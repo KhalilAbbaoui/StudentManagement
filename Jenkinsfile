@@ -33,7 +33,7 @@ pipeline {
                     echo 'Running SonarQube analysis...'
                     withSonarQubeEnv(credentialsId: 'student-sonar', installationName: 'Sonarqube') {
                         bat """
-                            "${SCANNERHOME}\\sonar-scanner" -Dsonar.projectKey=student-management
+                            "${SCANNERHOME}\\sonar-scanner" -Dsonar.projectKey=student-management -Dsonar.java.binaries=target/classes
                         """
                     }
                 }
