@@ -1,10 +1,6 @@
 pipeline {
     agent any // Définir l'agent Jenkins qui exécutera le pipeline. "any" signifie qu'il peut être exécuté sur n'importe quel agent disponible.
 
-    tools {
-        maven 'Maven 3.9.5' // Spécification de la version du Maven à utiliser pour la construction du projet.
-        jdk 'JDK 21' // Spécification du JDK
-    }
 
     environment {
         DOCKER_IMAGE = 'khalilabbaoui/studentmanagement:latest'  // Nom de l'image Docker à construire
