@@ -5,7 +5,7 @@ pipeline {
         DOCKER_IMAGE = 'khalilabbaoui/studentmanagement:latest'
         APP_PORT = '8080'
         HOST_PORT = '8081'
-        DOCKER_CREDENTIALS = credentials('student-management')  // Ensure this ID matches your Docker Hub credentials in Jenkins
+        DOCKER_CREDENTIALS = credentials('docker-hub-credentials')  // Ensure this ID matches your Docker Hub credentials in Jenkins
         SCANNERHOME = 'C:\\Program Files\\Jenkins\\.jenkins\\tools\\hudson.plugins.sonar.SonarRunnerInstallation\\sonar\\bin'  // Define the full path here'  // Ensure this matches your SonarQube scanner installation name
     }
 
@@ -64,7 +64,7 @@ pipeline {
             steps {
                 script {
                     echo 'Pushing Docker image to the registry...'
-                    docker.withRegistry('', 'StudentManagemnt') {  // Make sure the credentials ID here is correct
+                    docker.withRegistry('', 'docker-hub-credentials') {  // Make sure the credentials ID here is correct
                         docker.image("${DOCKER_IMAGE}").push()
                     }
                 }
