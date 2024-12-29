@@ -63,7 +63,7 @@ pipeline {
             steps {
                 script {
                     echo 'Pushing Docker image to the registry...'
-                    docker.withRegistry('', 'docker-hub-credentials') {
+                    docker.withRegistry("", "docker-hub-credentials") {
                         def customImage = docker.image("${DOCKER_IMAGE}")
                         customImage.push()
                     }
