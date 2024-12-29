@@ -64,7 +64,7 @@ pipeline {
             steps {
                 script {
                     echo 'Pushing Docker image to the registry...'
-                    docker.withRegistry('', 'studentmanagement') {  // Make sure the credentials ID here is correct
+                    docker.withRegistry('', '8fa4c95a-f141-47b0-aa20-f517ccb22168') {  // Make sure the credentials ID here is correct
                         docker.image("${DOCKER_IMAGE}").push()
                     }
                 }
