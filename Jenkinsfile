@@ -55,8 +55,8 @@ pipeline {
             steps {
                 script {
                     echo 'Building the Docker image for StudentManagement...'
-                    image=docker.build("${DOCKER_IMAGE}","--build-arg JAR_FILE=target/StudentManagement-1.0-SNAPSHOT.jar .")
-                    //image = docker.build("${DOCKER_IMAGE}:latest",".")
+                    docker.build("${DOCKER_IMAGE}","--build-arg JAR_FILE=target/StudentManagement-1.0-SNAPSHOT.jar .")
+
                 }
             }
         }
@@ -65,10 +65,10 @@ pipeline {
             steps {
                 script {
                     echo 'Pushing Docker image to the registry...'
-                    docker.withRegistry("", 'docker-hub-credentials') {  // Make sure the credentials ID here is correct
-                        //docker.image("${DOCKER_IMAGE}").push()
-                        image.push()
-                    }
+                    withCredentials([usernamePassword(credentialsId: 'docker-hub-credentials', passwordVariable: 'DOCKER_PASSWORD', usernameVariable: 'DOCKER_USERNAME')]) {
+                        bat "echo %DOCKER_PASSWORD% | docker login -u %DOCKER_USERNAME% --password-stdin"
+                        bat "docker push ${DOCKER_IMAGE}"
+                   }
                 }
             }
         }
@@ -77,9 +77,7 @@ pipeline {
             steps {
                 script {
                     echo 'Starting the StudentManagement application container...'
-                    def app = docker.image("${DOCKER_IMAGE}")
-                    app.withRun("-p ${HOST_PORT}:${APP_PORT}") {
-                        echo "Application running at port ${HOST_PORT}"
+                        bat "docker run -d -p ${HOST_PORT}:${APP_PORT} ${DOCKER_IMAGE}"
                     }
                 }
             }
