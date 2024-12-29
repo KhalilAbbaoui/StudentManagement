@@ -55,7 +55,7 @@ pipeline {
             steps {
                 script {
                     echo 'Building the Docker image for StudentManagement...'
-                    docker.build("${DOCKER_IMAGE}")
+                    docker.build("${DOCKER_IMAGE}","--build-arg JAR_FILE=target/StudentManagement-1.0-SNAPSHOT.jar .")
                 }
             }
         }
