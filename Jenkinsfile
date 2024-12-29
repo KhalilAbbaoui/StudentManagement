@@ -21,7 +21,7 @@ pipeline {
                 script {
                     echo 'Building the project with Maven...'
                     bat '''
-                    mvn clean package //this will generate the .jar file
+                    mvn clean package 
                     '''
                 }
             }
