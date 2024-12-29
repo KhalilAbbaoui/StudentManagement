@@ -20,7 +20,7 @@ pipeline {
                 script {
                     echo 'Building the project with Maven...'
                     bat '''
-                    mvn clean package
+                        mvn clean package
                     '''
                 }
             }
@@ -44,7 +44,7 @@ pipeline {
                 script {
                     echo 'Running tests with Maven...'
                     bat '''
-                    mvn test
+                        mvn test
                     '''
                 }
             }
@@ -54,7 +54,7 @@ pipeline {
             steps {
                 script {
                     echo 'Building the Docker image for StudentManagement...'
-                    docker.build("${DOCKER_IMAGE}","--build-arg JAR_FILE=target/StudentManagement-1.0-SNAPSHOT.jar .")
+                    def customImage = docker.build("${DOCKER_IMAGE}", "--build-arg JAR_FILE=target/StudentManagement-1.0-SNAPSHOT.jar .")
                 }
             }
         }
@@ -63,9 +63,9 @@ pipeline {
             steps {
                 script {
                     echo 'Pushing Docker image to the registry...'
-                    withCredentials([usernamePassword(credentialsId: 'docker-hub-credentials', passwordVariable: 'DOCKER_PASSWORD', usernameVariable: 'DOCKER_USERNAME')]) {
-                        bat "echo %DOCKER_PASSWORD% | docker login -u %DOCKER_USERNAME% --password-stdin"
-                        bat "docker push ${DOCKER_IMAGE}"
+                    docker.withRegistry('https://registry.hub.docker.com', 'docker-hub-credentials') {
+                        def customImage = docker.image("${DOCKER_IMAGE}")
+                        customImage.push()
                     }
                 }
             }
@@ -75,7 +75,7 @@ pipeline {
             steps {
                 script {
                     echo 'Starting the StudentManagement application container...'
-                    bat "docker run -d -p ${HOST_PORT}:${APP_PORT} ${DOCKER_IMAGE}"
+                    def container = docker.image("${DOCKER_IMAGE}").run("-p ${HOST_PORT}:${APP_PORT}")
                 }
             }
         }
